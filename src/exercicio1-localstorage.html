@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Bloco de notas</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <textarea name="Texto" id="anotacao" placeholder="Digite algo aqui..."></textarea>
+    </div>
+
+    <script>
+        const textarea = document.getElementById("anotacao");
+        const salvo = localStorage.getItem("minhaAnotacao");
+        if (salvo) {
+            textarea.value = salvo;
+        }
+        textarea.addEventListener("input", function() {
+            localStorage.setItem("minhaAnotacao", textarea.value);
+        });
+    </script>
+</body>
+<footer>
+    É perfeito para salvar rascunhos como no bloco de notas. São dados que o usuário espera encontrar exatamente onde deixou, mesmo se reiniciar o computador.
+</footer>
+</html>

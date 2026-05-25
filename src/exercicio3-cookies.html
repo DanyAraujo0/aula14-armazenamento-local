@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preferência de Idioma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            max-width: 500px;
+        }
+        .controles {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+        }
+        select, button {
+            padding: 8px;
+            font-size: 14px;
+            margin-right: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="titulo">Bem-vindo</h1>
+    <h2 id="subtitulo">Escolha seu idioma</h2>
+    <p id="frase">Esta é uma frase de exemplo que mudará conforme o idioma escolhido.</p>
+
+    <div class="controles">
+        <label for="seletorIdioma">Idioma / Language: </label>
+        <select id="seletorIdioma">
+            <option value="pt">Português</option>
+            <option value="en">English</option>
+        </select>
+        
+        <br>
+
+        <button id="btnSalvar">Salvar preferência</button>
+        <button id="btnRemover">Remover preferência</button>
+    </div>
+
+    <script>
+        // Dicionário contendo os textos nos dois idiomas
+        const textos = {
+            pt: { 
+                titulo: "Bem-vindo", 
+                subtitulo: "Escolha seu idioma",
+                frase: "Esta é uma frase de exemplo que mudará conforme o idioma escolhido.",
+                btnSalvar: "Salvar preferência",
+                btnRemover: "Remover preferência"
+            },
+            en: { 
+                titulo: "Welcome", 
+                subtitulo: "Choose your language",
+                frase: "This is an example sentence that will change according to the chosen language.",
+                btnSalvar: "Save preference",
+                btnRemover: "Remove preference"
+            }
+        };
+        // Define o cookie com tempo maximo para guardar o conteudo
+        function setCookie(nome, valor, dias) {
+            const maxAge = dias * 24 * 60 * 60; 
+            document.cookie = `${nome}=${valor}; max-age=${maxAge}; path=/`;
+        }
+
+        function getCookie(nome) {
+            const cookies = document.cookie.split("; ");
+            for (let i = 0; i < cookies.length; i++) {
+                const [cookieName, cookieValue] = cookies[i].split("="); 
+                if (cookieName === nome) {
+                    return cookieValue;
+                }
+            }
+            return null; 
+        }
+        function deleteCookie(nome) {
+            document.cookie = `${nome}=; max-age=0; path=/`;
+        }
+        // Funçao para alterar o idioma
+        function aplicarIdioma(idioma) {
+            document.getElementById("titulo").textContent = textos[idioma].titulo;
+            document.getElementById("subtitulo").textContent = textos[idioma].subtitulo;
+            document.getElementById("frase").textContent = textos[idioma].frase;
+            document.getElementById("btnSalvar").textContent = textos[idioma].btnSalvar;
+            document.getElementById("btnRemover").textContent = textos[idioma].btnRemover;
+            document.getElementById("seletorIdioma").value = idioma; 
+        }
+        // Salva a preferencia
+        document.getElementById("btnSalvar").addEventListener("click", () => {
+            const idiomaSelecionado = document.getElementById("seletorIdioma").value;
+            setCookie("idioma", idiomaSelecionado, 14);
+            aplicarIdioma(idiomaSelecionado);
+        });
+        // Remove a preferencia
+        document.getElementById("btnRemover").addEventListener("click", () => {
+            deleteCookie("idioma");
+            aplicarIdioma("pt");
+        });
+       const idiomaSalvo = getCookie("idioma");
+        if (idiomaSalvo && textos[idiomaSalvo]) {
+            aplicarIdioma(idiomaSalvo);
+        } else {
+            aplicarIdioma("pt");
+        }
+    </script>
+</body>
+<footer>
+    O cookie é a ferramenta correta o servidor saber a sua língua antes de mandar a página para a tela. Também é a tecnologia padrão para segurança de autenticação: é no cookie que o servidor guarda a "chave" invisível que diz que você está logado na sua conta.
+</footer>
+</html>

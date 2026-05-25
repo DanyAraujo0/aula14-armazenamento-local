@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de compras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 400px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 6px;
+            font-size: 14px;
+        }
+        button {
+            padding: 6px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .btn-remover {
+            margin-left: 10px;
+            padding: 2px 5px;
+            font-size: 12px;
+            background-color: #ffcccc;
+            border: 1px solid #cc0000;
+            border-radius: 3px;
+        }
+        .contador {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .btn-esvaziar {
+            margin-top: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Meu Carrinho</h2>
+
+    <div class="input-group">
+        <input type="text" id="produtoInput" placeholder="Nome do produto">
+        <button id="btnAdicionar">Adicionar ao carrinho</button>
+    </div>
+
+    <ul id="listaCarrinho"></ul>
+
+    <div class="contador" id="contadorItens">0 produto(s) no carrinho</div>
+    <button id="btnEsvaziar" class="btn-esvaziar">Esvaziar carrinho</button>
+
+    <script>
+        const produtoInput = document.getElementById("produtoInput");
+        const btnAdicionar = document.getElementById("btnAdicionar");
+        const listaCarrinho = document.getElementById("listaCarrinho");
+        const contadorItens = document.getElementById("contadorItens");
+        const btnEsvaziar = document.getElementById("btnEsvaziar");
+
+        let produtos = [];
+        const salvo = sessionStorage.getItem("carrinho");
+        if (salvo) {
+            produtos = JSON.parse(salvo);
+        }
+
+        function atualizarTela() {
+            listaCarrinho.innerHTML = "";
+            produtos.forEach((produto, index) => {
+                const li = document.createElement("li");
+                li.textContent = produto;
+
+                // Cria o botão de remover para produto específico
+                const btnRemover = document.createElement("button");
+                btnRemover.textContent = "Remover";
+                btnRemover.className = "btn-remover";
+                // Quando clicar, remove o item e atualiza a tela
+                btnRemover.addEventListener("click", () => removerProduto(index));
+
+                li.appendChild(btnRemover);
+                listaCarrinho.appendChild(li);
+            });
+
+            // Atualiza o texto do contador
+            contadorItens.textContent = `${produtos.length} produto(s) no carrinho`;
+
+            // Salva a lista atualizada
+            sessionStorage.setItem("carrinho", JSON.stringify(produtos));
+        }
+
+        // Função para adicionar um novo produto
+        function adicionarProduto() {
+            const nomeProduto = produtoInput.value.trim(); 
+
+            if (nomeProduto === "") {
+                alert("Por favor, digite o nome de um produto.");
+                return;
+            }
+
+            produtos.push(nomeProduto); 
+            produtoInput.value = ""; 
+            atualizarTela(); 
+        }
+        // Remover produto especifico
+        function removerProduto(index) {
+            produtos.splice(index, 1); 
+            atualizarTela(); 
+        }
+
+        // Esvaziar todo o carrinho
+        function esvaziarCarrinho() {
+            produtos = []; 
+            atualizarTela();
+        }
+
+        // Aciona o evento dos botões
+        btnAdicionar.addEventListener("click", adicionarProduto);
+        btnEsvaziar.addEventListener("click", esvaziarCarrinho);
+
+        produtoInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                adicionarProduto();
+            }
+        });
+
+        atualizarTela();
+    </script>
+</body>
+<footer>
+    É ótimo para manter o estado de algo enquanto o usuário navega por um fluxo imediato. Se o usuário desistir e fechar a aba, garante que não ficou "lixo" salvo na memoria.
+</footer>
+</html>
